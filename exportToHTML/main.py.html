@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">bs4 </span><span class="s0">import </span><span class="s1">BeautifulSoup</span>
+<span class="s0">import </span><span class="s1">requests</span>
+
+<span class="s1">choice = input(</span><span class="s2">&quot;Which year would you like to travel to? Type the date in this format YYYY-MM-DD: &quot;</span><span class="s1">)</span>
+
+<span class="s1">song_year = (</span><span class="s2">f&quot;https://www.billboard.com/charts/hot-100/</span><span class="s0">{</span><span class="s1">choice</span><span class="s0">}</span><span class="s2">&quot;</span><span class="s1">)</span>
+
+<span class="s1">response = requests.get(song_year)</span>
+
+<span class="s1">bb_site = (response.text)</span>
+
+<span class="s1">soup = BeautifulSoup(bb_site</span><span class="s0">, </span><span class="s2">&quot;html.parser&quot;</span><span class="s1">)</span>
+
+<span class="s1">song_names = soup.find_all(name=</span><span class="s2">&quot;span&quot;</span><span class="s0">, </span><span class="s1">class_=</span><span class="s2">&quot;chart-element__information__song text--truncate color--primary&quot;</span><span class="s1">)</span>
+<span class="s1">artist_names = soup.find_all(name=</span><span class="s2">&quot;span&quot;</span><span class="s0">, </span><span class="s1">class_=</span><span class="s2">&quot;chart-element__information__artist text--truncate color--secondary&quot;</span><span class="s1">)</span>
+
+<span class="s1">all_songs = []</span>
+<span class="s1">all_artists = []</span>
+
+<span class="s0">for </span><span class="s1">text </span><span class="s0">in </span><span class="s1">song_names:</span>
+    <span class="s1">song = text.getText()</span>
+    <span class="s1">all_songs.append(song)</span>
+
+<span class="s0">for </span><span class="s1">text </span><span class="s0">in </span><span class="s1">artist_names:</span>
+    <span class="s1">artist = text.getText()</span>
+    <span class="s1">all_artists.append(artist)</span>
+
+<span class="s1">your_top_100 = []</span>
+
+<span class="s0">with </span><span class="s1">open(</span><span class="s2">f&quot;</span><span class="s0">{</span><span class="s1">choice</span><span class="s0">}</span><span class="s2">-billboard_top_100.txt&quot;</span><span class="s0">, </span><span class="s1">mode=</span><span class="s2">&quot;w&quot;</span><span class="s1">) </span><span class="s0">as </span><span class="s1">file:</span>
+    <span class="s0">for </span><span class="s1">song</span><span class="s0">, </span><span class="s1">artist </span><span class="s0">in </span><span class="s1">zip(all_songs</span><span class="s0">, </span><span class="s1">all_artists):</span>
+        <span class="s1">song_list = (</span><span class="s2">f'&quot;</span><span class="s0">{</span><span class="s1">song[::]</span><span class="s0">}</span><span class="s2">&quot;'</span><span class="s1">)</span>
+        <span class="s1">artist_list = artist[::]</span>
+        <span class="s1">your_top_100 = [</span><span class="s2">f'</span><span class="s0">{</span><span class="s1">song_list</span><span class="s0">} </span><span class="s2">by </span><span class="s0">{</span><span class="s1">artist_list</span><span class="s0">}</span><span class="s2">'</span><span class="s1">]</span>
+        <span class="s0">for </span><span class="s1">song </span><span class="s0">in </span><span class="s1">your_top_100:</span>
+            <span class="s1">file.write(</span><span class="s2">f&quot;</span><span class="s0">{</span><span class="s1">song</span><span class="s0">}\n</span><span class="s2">&quot;</span><span class="s1">)</span>
+        <span class="s1">print(your_top_100)</span>
+
+
+</pre>
+</body>
+</html>
